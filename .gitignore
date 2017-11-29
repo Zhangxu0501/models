@@ -93,4 +93,4 @@ ENV/
 #models
 research/object_detection/AnzhiTrain/
 *.tar.gz
-
+.DS_Store
