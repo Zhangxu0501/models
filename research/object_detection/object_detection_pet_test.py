@@ -32,29 +32,28 @@ def load_image_into_numpy_array(image):
 
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
 
-NUM_CLASSES = 90
+
+NUM_CLASSES = 37
 
 
 
 detection_graph = tf.Graph()
 with detection_graph.as_default():
   od_graph_def = tf.GraphDef()
-  with tf.gfile.GFile("AnzhiTrain.ckpt", 'rb') as fid:
+  with tf.gfile.GFile("/root/models/research/object_detection/AnzhiModel/frozen_inference_graph.pb", 'rb') as fid:
     serialized_graph = fid.read()
     od_graph_def.ParseFromString(serialized_graph)
     tf.import_graph_def(od_graph_def, name='')
 
 
-label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
+label_map = label_map_util.load_labelmap("/root/data/pet_label_map.pbtxt")
 categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
 
 
-PATH_TO_TEST_IMAGES_DIR = 'test_images'
-TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 3) ]
+
 
 # Size, in inches, of the output images.
 IMAGE_SIZE = (12, 8)
@@ -70,26 +69,26 @@ with detection_graph.as_default():
     detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-    for image_path in TEST_IMAGE_PATHS:
-      image = Image.open(image_path)
-      # the array based representation of the image will be used later in order to prepare the
-      # result image with boxes and labels on it.
-      image_np = load_image_into_numpy_array(image)
-      # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-      image_np_expanded = np.expand_dims(image_np, axis=0)
-      # Actual detection.
-      (boxes, scores, classes, num) = sess.run(
-          [detection_boxes, detection_scores, detection_classes, num_detections],
-          feed_dict={image_tensor: image_np_expanded})
-      # Visualization of the results of a detection.
-      vis_util.visualize_boxes_and_labels_on_image_array(
-          image_np,
-          np.squeeze(boxes),
-          np.squeeze(classes).astype(np.int32),
-          np.squeeze(scores),
-          category_index,
-          use_normalized_coordinates=True,
-          line_thickness=8)
-      print "end!!!"
-      img=Image.fromarray(image_np)
-      img.save("../../../1234.jpg")
+  image_path="Abyssinian.jpg"
+  image = Image.open(image_path)
+  # the array based representation of the image will be used later in order to prepare the
+  # result image with boxes and labels on it.
+  image_np = load_image_into_numpy_array(image)
+  # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+  image_np_expanded = np.expand_dims(image_np, axis=0)
+  # Actual detection.
+  (boxes, scores, classes, num) = sess.run(
+      [detection_boxes, detection_scores, detection_classes, num_detections],
+      feed_dict={image_tensor: image_np_expanded})
+  # Visualization of the results of a detection.
+  vis_util.visualize_boxes_and_labels_on_image_array(
+      image_np,
+      np.squeeze(boxes),
+      np.squeeze(classes).astype(np.int32),
+      np.squeeze(scores),
+      category_index,
+      use_normalized_coordinates=True,
+      line_thickness=8)
+  print "end!!!"
+  img=Image.fromarray(image_np)
+  img.show("anzhi")
