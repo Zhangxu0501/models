@@ -2,45 +2,30 @@
 import numpy as np
 import sys
 import tensorflow as tf
-
 from PIL import Image
-# This is needed to display the images.
 
 
-
-# This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
-
 from utils import label_map_util
-
 from utils import visualization_utils as vis_util
 
-
-
 def load_image_into_numpy_array(image):
-  (im_width, im_height) = image.size
-  return np.array(image.getdata()).reshape(
-      (im_height, im_width, 3)).astype(np.uint8)
+    (im_width,im_height)=image.size
+    return np.array(image.getdata()).reshape(im_height,im_width,3).astype(np.uint8)
 
+NUM_CLASS=20
 
-
-NUM_CLASSES = 37
-
-
-
-detection_graph = tf.Graph()
+detection_graph=tf.Graph()
 with detection_graph.as_default():
-  od_graph_def = tf.GraphDef()
-  with tf.gfile.GFile("/root/models/research/object_detection/AnzhiModel/frozen_inference_graph.pb", 'rb') as fid:
-    serialized_graph = fid.read()
-    od_graph_def.ParseFromString(serialized_graph)
-    tf.import_graph_def(od_graph_def, name='')
+    od_graph_def=tf.GraphDef()
+    with tf.gfile.GFile("/root/models/research/object_detection/AnzhiModelVoc2012/frozen_inference_graph.pb", 'rb') as fid:
+        serialized_graph=fid.read()
+        od_graph_def.ParseFromString(serialized_graph)
+        tf.import_graph_def(od_graph_def, name='')
 
-
-label_map = label_map_util.load_labelmap("/root/data/pet_label_map.pbtxt")
-categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
+label_map = label_map_util.load_labelmap("/root/voc2012/pascal_label_map.pbtxt")
+categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASS, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
-
 
 
 with detection_graph.as_default():
