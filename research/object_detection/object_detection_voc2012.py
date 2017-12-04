@@ -61,5 +61,5 @@ with detection_graph.as_default():
       line_thickness=8)
   print "end!!!"
   img=Image.fromarray(image_np)
-  img.show("anzhi")
+  # img.show("anzhi")
   img.save("../../../anzhi.jpg")
