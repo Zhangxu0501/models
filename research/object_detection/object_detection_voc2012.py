@@ -62,3 +62,4 @@ with detection_graph.as_default():
   print "end!!!"
   img=Image.fromarray(image_np)
   img.show("anzhi")
+  img.save("../../../anzhi.jpg")
