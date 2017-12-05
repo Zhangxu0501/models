@@ -39,7 +39,7 @@ with detection_graph.as_default():
     detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-  image_path="timg.jpeg"
+  image_path="timg.jpg"
   image = Image.open(image_path)
   # the array based representation of the image will be used later in order to prepare the
   # result image with boxes and labels on it.
